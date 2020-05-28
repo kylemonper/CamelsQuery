@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1590696329764.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "BBC178E5",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : -2147483648,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "931CEDB3",
+        "caption" : "param_codes",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=param_codes&cache_key=931CEDB3",
+        "displayedObservations" : 30,
+        "environment" : "",
+        "object" : "param_codes",
+        "preview" : 0,
+        "totalObservations" : 30,
+        "variables" : 4
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
