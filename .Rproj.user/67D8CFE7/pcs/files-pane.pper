@@ -1,9 +1,0 @@
-{
-    "path" : "~/.R/CamelsQuery-pkg",
-    "sortOrder" : [
-        {
-            "ascending" : true,
-            "columnIndex" : 2
-        }
-    ]
-}
