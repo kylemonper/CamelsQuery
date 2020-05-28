@@ -22,5 +22,6 @@ Suggests:
     knitr,
     rmarkdown,
     janitor,
-    lubridate
+    lubridate,
+    testthat
 VignetteBuilder: knitr
