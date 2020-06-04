@@ -11,8 +11,7 @@
 #' @export
 #'
 #' @examples
-#'
-#'
+#' \dontrun{
 #' daymet_dir <- "~/CAMELS/basin_dataset_public_v1p2/basin_mean_forcing/daymet"
 #' attr_dir <- "~/CAMELS/camels_attributes_v2.0"
 #' huc8_names <- c("01013500", "08269000")
@@ -46,6 +45,7 @@
 #' gauge_id huc_02 gauge_name
 #'    <chr>    <chr>  <chr>
 #'  1 08269000 13     RIO PUEBLO DE TAOS NEAR TAOS, NM
+#'  }
 
 extract_huc_data_gauge <- function(daymet_dir, attr_dir, huc8_names) {
   ### check that filepaths exist
@@ -142,7 +142,8 @@ extract_huc_data_gauge <- function(daymet_dir, attr_dir, huc8_names) {
 #' @return named list for each huc8 with 8 nested named lists, one for each attribut of interest
 #' @export
 #'
-#' @examples \dontrun{
+#' @examples
+#' \dontrun{
 #' daymet_dir <- "~/CAMELS/basin_dataset_public_v1p2"
 #' attr_dir <- "~/CAMELS/camels_attributes_v2.0"
 #' huc8_names <- c("01013500", "08269000")
@@ -177,6 +178,7 @@ extract_huc_data_gauge <- function(daymet_dir, attr_dir, huc8_names) {
 #'    <chr>    <chr>  <chr>
 #'  1 08269000 13     RIO PUEBLO DE TAOS NEAR TAOS, NM
 #'}
+#'
 extract_huc_data <- function(basin_dir, attr_dir, huc8_names) {
 
   ### assuming a consistent file structure these should yield the correct filepaths to daymet forcing and streamflow data
