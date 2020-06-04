@@ -14,35 +14,46 @@
 #'
 get_sample_data <- function(site_names) {
 
+  ## the goal of this function is make the dataRetrieval::readWQPdata() function a bit easier to use
+  #~ if site codes are incorrect readWQPdata() gives a vague error and also stops the function entirely, also it doesn't tell the user which sites dont have any qater quality data
+  #~~ this function indentifies site codes that arn't present/dont have data tells the user about those, and then uses only sites with data to run the readWQPdata() function
+
+  ### create empty logical variables to be used for indexing working from non-working site codes
   err <- logical(length(site_names))
   no_data <- logical(length(site_names))
   working <- logical(length(site_names))
 
   for (i in 1:length(site_names)) {
-
+    ## look for sites that have sample data associated with them
+    ## we use trycatch() because if a site doesn't exist the function is aborted/exited
     data <- tryCatch(
       whatWQPsamples(siteid = site_names[i]),
       error=function(e) e
     )
 
+    ## if try catch recieved and error, ID this site code as being an error
     if (inherits(data, "error")) {
       err[i] <- TRUE
       next
 
+    ## if there was no sample data present for this site, ID this as a "no data" site
     } else if (length(data) == 1) {
       no_data[i] <- TRUE
       next
     }
 
+    ## if niether of the past two if statements didnt trigger, ID this site code as working
     working[i] <- TRUE
 
   }
 
+    ## throw a message letting the user know about incorrect site codes, or sites that don't have any data.
   if(any(err)) cat("following sites not found please check that these station codes are correct: \n", sprintf("%s \n", site_names[err]))
   if(any(no_data)) cat("no sample data found for sites: \n", sprintf(" %s \n", site_names[no_data]))
 
-  present <- working[!is.na(working)]
 
+
+  # run readWQPdata() using working site names, then filter for only water quality data of interest based on the list of param_codes that is stored in the package data
   wq_data <- readWQPdata(siteid = site_names[working]) %>%
     filter(USGSPCode %in% param_codes$`5_digit_code`)
 
