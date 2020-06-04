@@ -14,10 +14,10 @@
 #'
 get_sample_data <- function(site_names) {
 
-
   err <- logical(length(site_names))
   no_data <- logical(length(site_names))
   working <- logical(length(site_names))
+
   for (i in 1:length(site_names)) {
 
     data <- tryCatch(
@@ -28,6 +28,7 @@ get_sample_data <- function(site_names) {
     if (inherits(data, "error")) {
       err[i] <- TRUE
       next
+
     } else if (length(data) == 1) {
       no_data[i] <- TRUE
       next
