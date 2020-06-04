@@ -1,6 +1,6 @@
 #' extract huc data listed by attribute
 #'
-#' This function takes a list of watershed Huc 8s and extracts daily mean forcing dayment data as well as relevant climate, geology, hyrdology, area, soil, topography and vegetation data
+#' This function takes a list of watershed Huc 8s and extracts daily mean forcing daymet data as well as relevant climate, geology, hyrdology, area, soil, topography and vegetation data
 #'
 #' @param daymet_dir directory path to daymet data should look something like: "~/basin_dataset_public_v1p2/basin_mean_forcing/daymet" this directory pathway MUST end with the daymet/ folder
 #' -- within this folder there should more directories (labeled '01', '02', '03' etc) representing different huc2 watersheds
@@ -11,13 +11,12 @@
 #' @export
 #'
 #' @examples
-#'
-#'
+#' \dontrun{
 #' daymet_dir <- "~/CAMELS/basin_dataset_public_v1p2/basin_mean_forcing/daymet"
 #' attr_dir <- "~/CAMELS/camels_attributes_v2.0"
 #' huc8_names <- c("01013500", "08269000")
 #'
-#' data <- extract_data(daymet_dir = daymet_dir, attr_dir = attr_dir, huc8_names = huc8_names)
+#' data <- extract_huc_data_gauge(daymet_dir = daymet_dir, attr_dir = attr_dir, huc8_names = huc8_names)
 #'
 #' ## list of hucs queried
 #' > names(data)
@@ -46,6 +45,7 @@
 #' gauge_id huc_02 gauge_name
 #'    <chr>    <chr>  <chr>
 #'  1 08269000 13     RIO PUEBLO DE TAOS NEAR TAOS, NM
+#'  }
 
 extract_huc_data_gauge <- function(daymet_dir, attr_dir, huc8_names) {
   ### check that filepaths exist
@@ -142,41 +142,21 @@ extract_huc_data_gauge <- function(daymet_dir, attr_dir, huc8_names) {
 #' @return named list for each huc8 with 8 nested named lists, one for each attribut of interest
 #' @export
 #'
-#' @examples \dontrun{
-#' daymet_dir <- "~/CAMELS/basin_dataset_public_v1p2"
+#' @examples
+#' \dontrun{
+#' ts_dir <- "~/CAMELS/basin_dataset_public_v1p2"
 #' attr_dir <- "~/CAMELS/camels_attributes_v2.0"
 #' huc8_names <- c("01013500", "08269000")
 #'
-#' data <- extract_data(daymet_dir = daymet_dir, attr_dir = attr_dir, huc8_names = huc8_names)
+#' data <- extract_huc_data(basin_dir = ts_dir, attr_dir = attr_dir, huc8_names = huc8_names)
 #'
 #' ## list of hucs queried
 #' > names(data)
-#' [1] "01013500" "08269000"
+#' [1] "mean_forcing_daymet" "usgs_streamflow"     "camels_clim"         "camels_geol"         "camels_hydro"
+#' [6] "camels_name"         "camels_soil"         "camels_topo"         "camels_vege"
 #'
-#' ## names of dataframes within first list item
-#' > names(data[[1]])
-#' [1] "daymet"       "camels_clim"  "camels_geol"  "camels_hydro"
-#' [5] "camels_name"  "camels_soil"  "camels_topo"  "camels_vege"
-#'
-#' ## same results using the huc ID for first ID in entered vector
-#' > names(data[["01013500"]])
-#' [1] "daymet"       "camels_clim"  "camels_geol"  "camels_hydro"
-#' [5] "camels_name"  "camels_soil"  "camels_topo"  "camels_vege"
-#'
-#' ## getting data for specific attribute from huc 01013500
-#' > data[["01013500"]]$camels_name
-#   A tibble: 1 x 3
-#' gauge_id huc_02 gauge_name
-#'    <chr>    <chr>  <chr>
-#'  1 01013500 01     Fish River near Fort Kent, Maine
-#'
-#' ## similarly using the $ syntax:
-#' > data$`08269000`$camels_name
-#' A tibble: 1 x 3
-#' gauge_id huc_02 gauge_name
-#'    <chr>    <chr>  <chr>
-#'  1 08269000 13     RIO PUEBLO DE TAOS NEAR TAOS, NM
 #'}
+#'
 extract_huc_data <- function(basin_dir, attr_dir, huc8_names) {
 
   ### assuming a consistent file structure these should yield the correct filepaths to daymet forcing and streamflow data
@@ -318,57 +298,4 @@ extract_huc_data <- function(basin_dir, attr_dir, huc8_names) {
 
 }
 
-
-
-
-#' get sample data from dataRetrieval pacakge
-#'
-#' this is mainly a helper function for using the readWQPdata() function from the dataRetrieval package in that it helps the user identify if any of the station of interest dont have sample data associated with them, or simply dont exist.
-#'
-#' @param site_names list of site names
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
-#' site_names <- c("USEPA-440432070255401","test", "USGS-010158001", "USGS-01011100", "test2")
-#' sample_data <- get_sample_data(site_names)
-#'
-get_sample_data <- function(site_names) {
-
-
-  err <- logical(length(site_names))
-  no_data <- logical(length(site_names))
-  working <- logical(length(site_names))
-  for (i in 1:length(site_names)) {
-
-    data <- tryCatch(
-      whatWQPsamples(siteid = site_names[i]),
-      error=function(e) e
-    )
-
-    if (inherits(data, "error")) {
-      err[i] <- TRUE
-      next
-    } else if (length(data) == 1) {
-      no_data[i] <- TRUE
-      next
-    }
-
-    working[i] <- TRUE
-
-  }
-
-  if(any(err)) cat("following sites not found please check that these station codes are correct: \n", sprintf("%s \n", site_names[err]))
-  if(any(no_data)) cat("no sample data found for sites: \n", sprintf(" %s \n", site_names[no_data]))
-
-  present <- working[!is.na(working)]
-
-  wq_data <- readWQPdata(siteid = site_names[working]) %>%
-    filter(USGSPCode %in% param_codes$`5_digit_code`)
-
-  return(wq_data)
-
-}
 
