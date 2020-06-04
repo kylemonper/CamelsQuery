@@ -1,8 +1,8 @@
 # CamelsQuery
 
-This package ease the processing of NCAR Catchement Attributes and Meteorlogy for Large-sample Studies (CAMELS) data using R using a set of USGS stream gages ([here](https://help.waterdata.usgs.gov/) for more).
+This package ease the processing of NCAR Catchement Attributes and Meteorlogy for Large-sample Studies (CAMELS) data using R using a set of USGS stream gages ([here](https://help.waterdata.usgs.gov/) for more). In its current version, this package assumes you have previoulsy downloaded and unzipped the CAMELS dataset.
 
-https://ral.ucar.edu/solutions/products/camels
+CAMELS data: https://ral.ucar.edu/solutions/products/camels
 
 ## More about this data set
 
