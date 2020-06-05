@@ -18,16 +18,15 @@ extract_huc_data_gauge(daymet_dir, attr_dir, huc8_names)
 named list for each huc8 with 8 nested named lists, one for each attribut of interest
 }
 \description{
-This function takes a list of watershed Huc 8s and extracts daily mean forcing dayment data as well as relevant climate, geology, hyrdology, area, soil, topography and vegetation data
+This function takes a list of watershed Huc 8s and extracts daily mean forcing daymet data as well as relevant climate, geology, hyrdology, area, soil, topography and vegetation data
 }
 \examples{
-
-
+\dontrun{
 daymet_dir <- "~/CAMELS/basin_dataset_public_v1p2/basin_mean_forcing/daymet"
 attr_dir <- "~/CAMELS/camels_attributes_v2.0"
 huc8_names <- c("01013500", "08269000")
 
-data <- extract_data(daymet_dir = daymet_dir, attr_dir = attr_dir, huc8_names = huc8_names)
+data <- extract_huc_data_gauge(daymet_dir = daymet_dir, attr_dir = attr_dir, huc8_names = huc8_names)
 
 ## list of hucs queried
 > names(data)
@@ -55,4 +54,5 @@ A tibble: 1 x 3
 gauge_id huc_02 gauge_name
    <chr>    <chr>  <chr>
  1 08269000 13     RIO PUEBLO DE TAOS NEAR TAOS, NM
+ }
 }

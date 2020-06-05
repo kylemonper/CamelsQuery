@@ -22,37 +22,17 @@ This function takes a list of watershed Huc 8s and extracts daily mean forcing d
 }
 \examples{
 \dontrun{
-daymet_dir <- "~/CAMELS/basin_dataset_public_v1p2"
+ts_dir <- "~/CAMELS/basin_dataset_public_v1p2"
 attr_dir <- "~/CAMELS/camels_attributes_v2.0"
 huc8_names <- c("01013500", "08269000")
 
-data <- extract_data(daymet_dir = daymet_dir, attr_dir = attr_dir, huc8_names = huc8_names)
+data <- extract_huc_data(basin_dir = ts_dir, attr_dir = attr_dir, huc8_names = huc8_names)
 
 ## list of hucs queried
 > names(data)
-[1] "01013500" "08269000"
+[1] "mean_forcing_daymet" "usgs_streamflow"     "camels_clim"         "camels_geol"         "camels_hydro"
+[6] "camels_name"         "camels_soil"         "camels_topo"         "camels_vege"
 
-## names of dataframes within first list item
-> names(data[[1]])
-[1] "daymet"       "camels_clim"  "camels_geol"  "camels_hydro"
-[5] "camels_name"  "camels_soil"  "camels_topo"  "camels_vege"
-
-## same results using the huc ID for first ID in entered vector
-> names(data[["01013500"]])
-[1] "daymet"       "camels_clim"  "camels_geol"  "camels_hydro"
-[5] "camels_name"  "camels_soil"  "camels_topo"  "camels_vege"
-
-## getting data for specific attribute from huc 01013500
-> data[["01013500"]]$camels_name
-gauge_id huc_02 gauge_name
-   <chr>    <chr>  <chr>
- 1 01013500 01     Fish River near Fort Kent, Maine
-
-## similarly using the $ syntax:
-> data$`08269000`$camels_name
-A tibble: 1 x 3
-gauge_id huc_02 gauge_name
-   <chr>    <chr>  <chr>
- 1 08269000 13     RIO PUEBLO DE TAOS NEAR TAOS, NM
 }
+
 }
