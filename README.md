@@ -48,9 +48,10 @@ library(CamelsQuery)
 ```
   
 ##### download data.
-Data cam be download manually from https://ral.ucar.edu/solutions/products/camels this package requires that specifically the following be downloaded from there:  
+Data can be download manually from https://ral.ucar.edu/solutions/products/camels. This package requires that specifically the following be downloaded from there:  
 - 1.2	CAMELS time series meteorology, observed flow, meta data (.zip)  
 - 2.0	CAMELS Attributes (.zip)   
+
 alternatively the `download_camels()` function can be used to automatically download and unzip the data into a folder of the user's choice
 
 
@@ -60,6 +61,7 @@ alternatively the `download_camels()` function can be used to automatically down
 #~ here this is simply creating a camels_data folder within the users home directory
 
 data_dir <- "~/CAMELS_data"
+
 download_camels(data_dir)
 ```
   
