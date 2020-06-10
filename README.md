@@ -59,8 +59,8 @@ alternatively the `download_camels()` function can be used to automatically down
 #~ note: this must be a nonexistant new folder within an already existing folder:
 #~ here this is simply creating a camels_data folder within the users home directory
 
-#data_dir <- "~/CAMELS_data"
-#download_camels(data_dir)
+data_dir <- "~/CAMELS_data"
+download_camels(data_dir)
 ```
   
   
