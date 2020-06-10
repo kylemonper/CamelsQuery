@@ -160,15 +160,15 @@ extract_huc_data_gauge <- function(daymet_dir, attr_dir, huc8_names) {
 extract_huc_data <- function(basin_dir, attr_dir, huc8_names) {
 
   ### assuming a consistent file structure these should yield the correct filepaths to daymet forcing and streamflow data
-  daymet_dir <- file.path(basin_dir, "basin_mean_forcing/daymet")
-  flow_dir <- file.path(basin_dir, "usgs_streamflow")
+  daymet_dir <- file.path(basin_dir, "basin_mean_forcing/daymet/")
+  flow_dir <- file.path(basin_dir, "usgs_streamflow/")
 
 
   ### check that these filepaths exist
-  if(!dir_exists(daymet_dir)) stop("daymet directory does not exist, please check file path")
-  if(!dir_exists(flow_dir)) stop("streamflow directory does not exist, please check file path")
+  if(!dir.exists(daymet_dir)) stop("daymet directory does not exist, please check file path")
+  if(!dir.exists(flow_dir)) stop("streamflow directory does not exist, please check file path")
   if(str_sub(daymet_dir, start = -6) != "daymet") stop("daymet directory is incorrect, please check file path")
-  if(!dir_exists(attr_dir)) stop("attribute directory does not exist, please check file path")
+  if(!dir.exists(attr_dir)) stop("attribute directory does not exist, please check file path")
 
 
 
