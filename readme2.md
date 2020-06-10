@@ -1,13 +1,39 @@
----
-title: "CamelsQuery"
-output:
-  pdf_document: default
-  html_document: default
----
+# CamelsQuery
 
+This package ease the processing of NCAR Catchement Attributes and Meteorlogy for Large-sample Studies (CAMELS) data using R using a set of USGS stream gages ([here](https://help.waterdata.usgs.gov/) for more). This package offers a function for downloading the data automatically, are it can be downloaded at the following site:
 
+CAMELS data: https://ral.ucar.edu/solutions/products/camels
 
-### This Markdown walks through the how to:  
+## More about this data set
+
+671 small - medium size catchments over the contiguous US (CONUS) minimally impacted by human activities.
+
+2 main type of daily time-series:
+
+- Daily atmospheric forcing (source: Daymet, Maurer and NLDAS)
+- Hydrologic reponse (source: USGS daily streamflow)
+
+Attributes data (climatologies):
+
+- topography
+- climate
+- streamflow
+- land cover
+- soil
+- geology
+
+code creating the data: https://github.com/naddor/camels
+
+## Package installation:
+``` 
+install.packages("devtools")
+devtools::install_github("kylemonper/CamelsQuery")
+```
+
+*** 
+  
+ # Walkthrough
+### This guide walks through the how to:  
 1. download CAMELS data remotely
 2. run and use the `extract_huc_data` function to query and visualize data from the CAMELS dataset
 3. use the `get_sample_data` function to get usgs streamgauge data
@@ -41,7 +67,7 @@ alternatively the `download_camels()` function can be used to automatically down
   
 #### The `extract_huc_data()` function requires three inputs  
 * basin directory (basin_dir)  
-  + This is the location of the `basin_data_public_v1p2` folder. From this directory you should be able to further navigate to desired daymet mean forcing data folders (labeled 01, 02, 03, etc) via : "~/home/basin_dataset_public_v1p2/basin_mean_forcing/daymet" , and the streamflow folders should be in: "~/home/basin_dataset_public_v1p2/usgs_streamflow" . This *exact* folder structure is required for the function to work properly  
+  + This is the location of the `basin_data_public_v1p2` folder. From this directory you should be able to further navigate to desired daymet mean forcing data folders (labeled 01, 02, 03, etc) via : "~/home/basin_dataset_public_v1p2/basin_mean_forcing/daymet" , and the streamflow folders should be in: "\~/home/basin_dataset_public_v1p2/usgs_streamflow" . This *exact* folder structure is required for the function to work properly (if you used the download function or downloaded from the correct locations mentioned above, this shouldn't be an issue)
 * attribute directory (attr_dir)  
   + location of .txt files for data attributes (camels_clim.txt, camels_geol.txt, etc)  
 * huc ids (huc8_names)  
@@ -66,7 +92,7 @@ data <- extract_huc_data(basin_dir = basin_dir,
                          huc8_names = huc8_names)
 ```
  
-\newpage
+
 
 ## Access output   
   
@@ -123,7 +149,6 @@ unique(mean_forcing$ID)
 ## [1] "01013500" "08269000" "10259200"
 ```
 
-\newpage
 
 ## visualize
 
