@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = F
 )
 ```
 
@@ -19,11 +20,32 @@ library(CamelsQuery)
 ```
 
 
-
-### This Markdown walks through the how to:  
-1. run the `extract_huc_data` function  
-2. retrieve specific information from it's output
+### This guide walks through the how to:  
+1. download CAMELS data remotely
+2. run and use the `extract_huc_data` function to query and visualize data from the CAMELS dataset
+3. use the `get_sample_data` function to get usgs streamgauge data
   
+    
+
+
+  
+##### download data.
+Data can be download manually from https://ral.ucar.edu/solutions/products/camels. This package requires that specifically the following be downloaded from there:  
+- 1.2	CAMELS time series meteorology, observed flow, meta data (.zip)  
+- 2.0	CAMELS Attributes (.zip)   
+
+alternatively the `download_camels()` function can be used to automatically download and unzip the data into a folder of the user's choice
+
+
+```{r}
+### specify new folder to be created
+#~ note: this must be a nonexistant new folder within an already existing folder:
+#~ here this is simply creating a camels_data folder within the users home directory
+
+data_dir <- "~/CAMELS_data"
+
+download_camels(data_dir)
+```
   
   
 #### The function requires three inputs  
@@ -39,8 +61,8 @@ library(CamelsQuery)
 
 ```{r}
 ##~ directories
-basin_dir <- "~/CAMELS/basin_dataset_public_v1p2/"
-attr_dir <- "~/CAMELS/camels_attributes_v2.0"
+basin_dir <- "~/CAMELS_data/basin_dataset_public_v1p2/"
+attr_dir <- "~/CAMELS_data/camels_attributes_v2.0"
 ##~ list of hucs to query (provided as a vector)
 huc8_names <- c("01013500", "08269000", "10259200")
 ### run function
@@ -99,23 +121,31 @@ ggplot(mean_forcing_date, aes(date, prcp_mm_day)) +
   facet_wrap(~gauge_name)
 ```
 
-\newpage  
-  
-## matching data from `dataRetrieval` package
+
+##get usgs water quality data
 ```{r}
-library(dataRetrieval)
-## finding NWIS sites in Maine (to match one of the selected sites above)
-sitesME <- whatWQPsites(statecode="US:23")
-### get the location name of the Maine site from the `Camel_name` data
-maine_camels <- locs %>% 
-  filter(str_detect(gauge_name, "Maine"))
-### join in NWIS data to get the USGS site code for this specific location
-location_info <- left_join(maine_camels, sitesME, by = c("gauge_name" = "MonitoringLocationName"))
-## retrieve USGS site ID
-USGS_sitecd <- location_info$MonitoringLocationIdentifier[1]
-### query NWIS for pH data at this site
-N_data <- readWQPdata(siteid = USGS_sitecd,
-                       characteristicName = "Nitrate")
-ggplot(N_data, aes(ActivityStartDate, ResultMeasureValue)) +
-  geom_point()
+## read in gauges of interest
+gauges <- readr::read_csv("~/CAMELS_data/USGS_trial_sites.csv")
+
+### dataRetrieval functions require sites to be named using an "Agency-Site#" format, this code reformats the trial sites csv into this format
+#~ eg: "USGS-01073319""
+gauges_new <- gauges %>% 
+  mutate(renamed_site = paste(SiteAgency, "-", SiteNumber, sep = ""))
+
+## get first 20 site names
+site_names <- gauges_new$renamed_site[1:20]
+
+sample_data <- get_sample_data(site_names)
 ```
+
+
+```{r}
+## look at nitrogen species for all sites over time
+N_spp <- sample_data %>% 
+  filter(CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)")
+
+ggplot(N_spp, aes(x = ActivityStartDate, y = ResultMeasureValue, color = MonitoringLocationIdentifier)) +
+  geom_point()
+
+```
+

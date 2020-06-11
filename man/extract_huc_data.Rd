@@ -7,12 +7,12 @@
 extract_huc_data(basin_dir, attr_dir, huc8_names)
 }
 \arguments{
+\item{basin_dir}{directory path to basin data should look something like: "~/basin_dataset_public_v1p2/" this directory pathway MUST end with the daymet/ folder
+-- within this folder there should more directories (labeled '01', '02', '03' etc) representing different huc2 watersheds}
+
 \item{attr_dir}{directory path for attributes data (e.g: "~/camels_attributes_v2.0")}
 
 \item{huc8_names}{vector of huc8 watershed IDs}
-
-\item{daymet_dir}{directory path to basin data should look something like: "~/basin_dataset_public_v1p2/" this directory pathway MUST end with the daymet/ folder
--- within this folder there should more directories (labeled '01', '02', '03' etc) representing different huc2 watersheds}
 }
 \value{
 named list for each huc8 with 8 nested named lists, one for each attribut of interest

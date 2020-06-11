@@ -10,14 +10,14 @@ get_sample_data(site_names)
 \item{site_names}{list of site names}
 }
 \value{
-
+water quality sample data for sites
 }
 \description{
 this is mainly a helper function for using the readWQPdata() function from the dataRetrieval package in that it helps the user identify if any of the station of interest don't have sample data associated with them, or simply don't exist.
 }
 \examples{
-
+\dontrun{
 site_names <- c("USEPA-440432070255401","test", "USGS-010158001", "USGS-01011100", "test2")
 sample_data <- get_sample_data(site_names)
-
+}
 }

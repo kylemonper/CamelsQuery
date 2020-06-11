@@ -17,10 +17,10 @@
 #' @export
 #'
 #' @examples
-#'
+#'\donttest{
 #' data_dir <- "~/CAMELS_data"
 #' download_camels(data_dir)
-#'
+#'}
 #'
 download_camels <- function(data_dir) {
 

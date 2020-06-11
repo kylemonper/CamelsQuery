@@ -4,14 +4,14 @@
 #'
 #' @param site_names list of site names
 #'
-#' @return
+#' @return water quality sample data for sites
 #' @export
 #'
 #' @examples
-#'
+#'\dontrun{
 #' site_names <- c("USEPA-440432070255401","test", "USGS-010158001", "USGS-01011100", "test2")
 #' sample_data <- get_sample_data(site_names)
-#'
+#'}
 get_sample_data <- function(site_names) {
 
   ## the goal of this function is make the dataRetrieval::readWQPdata() function a bit easier to use
@@ -53,10 +53,22 @@ get_sample_data <- function(site_names) {
 
 
 
-  # run readWQPdata() using working site names, then filter for only water quality data of interest based on the list of param_codes that is stored in the package data
+  # run readWQPdata() using working site names,
+  # then filter for only water quality data of interest based on the list of param_codes that is stored in the package data
+  ##~~~ NOTE: may want to remove this feature/ add it as a T/F option in the function
   wq_data <- readWQPdata(siteid = site_names[working]) %>%
     filter(USGSPCode %in% param_codes$`5_digit_code`)
 
   return(wq_data)
 
 }
+
+
+
+
+
+
+
+
+
+

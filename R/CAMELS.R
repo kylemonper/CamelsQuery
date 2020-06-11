@@ -134,7 +134,7 @@ extract_huc_data_gauge <- function(daymet_dir, attr_dir, huc8_names) {
 #'
 #' This function takes a list of watershed Huc 8s and extracts daily mean forcing dayment data as well as relevant climate, geology, hyrdology, area, soil, topography and vegetation data
 #'
-#' @param daymet_dir directory path to basin data should look something like: "~/basin_dataset_public_v1p2/" this directory pathway MUST end with the daymet/ folder
+#' @param basin_dir directory path to basin data should look something like: "~/basin_dataset_public_v1p2/" this directory pathway MUST end with the daymet/ folder
 #' -- within this folder there should more directories (labeled '01', '02', '03' etc) representing different huc2 watersheds
 #' @param attr_dir directory path for attributes data (e.g: "~/camels_attributes_v2.0")
 #' @param huc8_names vector of huc8 watershed IDs
