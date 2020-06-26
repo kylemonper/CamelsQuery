@@ -49,6 +49,7 @@ download_camels(data_dir)
   
   
 #### The function requires three inputs  
+
 * basin directory (basin_dir)  
   + This is the location of the `basin_data_public_v1p2` folder. From this directory you should be able to further navigate to desired daymet mean forcing data folders (labeled 01, 02, 03, etc) via : "~/home/basin_dataset_public_v1p2/basin_mean_forcing/daymet" , and the streamflow folders should be in: "~/home/basin_dataset_public_v1p2/usgs_streamflow" . This *exact* folder structure is required for the function to work properly  
 * attribute directory (attr_dir)  
@@ -61,15 +62,18 @@ download_camels(data_dir)
 
 ```{r}
 ##~ directories
-basin_dir <- "~/CAMELS_data/basin_dataset_public_v1p2/"
-attr_dir <- "~/CAMELS_data/camels_attributes_v2.0"
+my_basin_dir <- "~/Data/CAMELS/basin_timeseries_v1p2_metForcing_obsFlow/basin_dataset_public_v1p2"
+my_attr_dir <- "~/Data/CAMELS/camels_attributes_v2.0"
 ##~ list of hucs to query (provided as a vector)
-huc8_names <- c("01013500", "08269000", "10259200")
+# my_huc8_names <- c("01013500", "08269000", "10259200")
+stream_gauges <- read_csv("../inst/extdata/USGS_trial_sites.csv")
+my_huc8_names <- stream_gauges$SiteNumber
+
 ### run function
 ##~ this returns a named list object with 9 items
-data <- extract_huc_data(basin_dir = basin_dir, 
-                         attr_dir = attr_dir, 
-                         huc8_names = huc8_names)
+data <- extract_huc_data(basin_dir = my_basin_dir, 
+                         attr_dir = my_attr_dir, 
+                         huc8_names = my_huc8_names)
 ```
  
 \newpage
@@ -100,18 +104,22 @@ unique(mean_forcing$ID)
 
 \newpage
 
-## visualize
+## Visualize
 ```{r, message=F}
 library(ggplot2)
 library(lubridate) # for dates
 library(janitor) # clean column names
+
 ## first, rename huc ID's with location from camels_name, this isn't necessary, but makes for more informative labels
 locs <- data[["camels_name"]]
 names(locs)
+
 # clean column names
 cleaned_forcing <- clean_names(mean_forcing)
+
 ## join data (by ID) to bring in gauge names
 cleaned_names <- left_join(cleaned_forcing, locs, by = c("id" = "gauge_id"))
+
 ### turn year, month, day columns into single "date" column
 mean_forcing_date <- cleaned_names %>%
   ## join columns, forcing into year, month, day format
@@ -122,10 +130,10 @@ ggplot(mean_forcing_date, aes(date, prcp_mm_day)) +
 ```
 
 
-##get usgs water quality data
+## Get USGS water quality data
 ```{r}
 ## read in gauges of interest
-gauges <- readr::read_csv("~/CAMELS_data/USGS_trial_sites.csv")
+gauges <- readr::read_csv("../inst/extdata/USGS_trial_sites.csv")
 
 ### dataRetrieval functions require sites to be named using an "Agency-Site#" format, this code reformats the trial sites csv into this format
 #~ eg: "USGS-01073319""
@@ -133,7 +141,7 @@ gauges_new <- gauges %>%
   mutate(renamed_site = paste(SiteAgency, "-", SiteNumber, sep = ""))
 
 ## get first 20 site names
-site_names <- gauges_new$renamed_site[1:20]
+site_names <- gauges_new$renamed_site
 
 sample_data <- get_sample_data(site_names)
 ```
