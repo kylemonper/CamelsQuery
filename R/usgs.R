@@ -27,7 +27,7 @@ get_sample_data <- function(site_names) {
     ## look for sites that have sample data associated with them
     ## we use trycatch() because if a site doesn't exist the function is aborted/exited
     data <- tryCatch(
-      whatWQPsamples(siteid = site_names[i]),
+      dataRetrieval::whatWQPsamples(siteid = site_names[i]),
       error=function(e) e
     )
 
@@ -56,7 +56,7 @@ get_sample_data <- function(site_names) {
   # run readWQPdata() using working site names,
   # then filter for only water quality data of interest based on the list of param_codes that is stored in the package data
   ##~~~ NOTE: may want to remove this feature/ add it as a T/F option in the function
-  wq_data <- readWQPdata(siteid = site_names[working]) %>%
+  wq_data <- dataRetrieval::readWQPdata(siteid = site_names[working]) %>%
     filter(USGSPCode %in% param_codes$`5_digit_code`)
 
   return(wq_data)
