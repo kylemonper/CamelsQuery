@@ -49,6 +49,7 @@
 
 extract_huc_data_gauge <- function(daymet_dir, attr_dir, huc8_names) {
   ### check that filepaths exist
+
   if(!dir_exists(daymet_dir)) stop("daymet directory does not exist, please check file path")
   if(str_sub(daymet_dir, start = -6) != "daymet") stop("daymet directory is incorrect, please check file path")
   if(!dir_exists(attr_dir)) stop("attribute directory does not exist, please check file path")
@@ -167,7 +168,7 @@ extract_huc_data <- function(basin_dir, attr_dir, huc8_names) {
   ### check that these filepaths exist
   if(!dir.exists(daymet_dir)) stop("daymet directory does not exist, please check file path")
   if(!dir.exists(flow_dir)) stop("streamflow directory does not exist, please check file path")
-  if(str_sub(daymet_dir, start = -6) != "daymet") stop("daymet directory is incorrect, please check file path")
+  if(stringr::str_sub(gsub("/","",daymet_dir), start = -6) != "daymet") stop("daymet directory is incorrect, please check file path")
   if(!dir.exists(attr_dir)) stop("attribute directory does not exist, please check file path")
 
 
@@ -186,6 +187,8 @@ extract_huc_data <- function(basin_dir, attr_dir, huc8_names) {
                                                recursive = T)) %>%
       filter(str_detect(files, paste(huc8_names, collapse = "|")))
 
+  # Check if matches were found
+  if(nrow(daymet_file) == 0) stop("None of those gauges are in the CAMELS database")
 
 
   ### read each of the met files in
@@ -198,9 +201,9 @@ extract_huc_data <- function(basin_dir, attr_dir, huc8_names) {
       skip = 3,
       col_types = cols())
 
-    ### get huc names from file path (we cant reliably use the orginal huc8 vector incase one wasn't found)
+    ### get huc names from file path (we cant reliably use the original huc8 vector incase one wasn't found)
     ##~ will use this to name each list item, which will then be turned into an ID when turning list into df
-    ##~~~ the below line of code pastes row i from the df, and cleanes the file path to just the huc by subtracting the first 8 chacters from the textfile name (basename)
+    ##~~~ the below line of code pastes row i from the df, and cleans the file path to just the huc by subtracting the first 8 chacters from the textfile name (basename)
     ids[i] <- str_sub(basename(paste(daymet_file[i,1])), end = 8)
 
   }
