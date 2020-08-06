@@ -42,9 +42,9 @@ alternatively the `download_camels()` function can be used to automatically down
 #~ note: this must be a nonexistant new folder within an already existing folder:
 #~ here this is simply creating a camels_data folder within the users home directory
 
-data_dir <- "~/CAMELS_data"
+data_dir <- "~/Data/CAMELS"
 
-download_camels(data_dir)
+# download_camels(data_dir)
 ```
   
   
@@ -65,13 +65,13 @@ download_camels(data_dir)
 my_basin_dir <- "~/Data/CAMELS/basin_timeseries_v1p2_metForcing_obsFlow/basin_dataset_public_v1p2"
 my_attr_dir <- "~/Data/CAMELS/camels_attributes_v2.0"
 ##~ list of hucs to query (provided as a vector)
-# my_huc8_names <- c("01013500", "08269000", "10259200")
-stream_gauges <- read_csv("../inst/extdata/USGS_trial_sites.csv")
-my_huc8_names <- stream_gauges$SiteNumber
+my_huc8_names <- c("01144000", "01170100", "01169000")
+# stream_gauges <- read_csv("../inst/extdata/USGS_trial_sites.csv")
+# my_huc8_names <- stream_gauges$SiteNumber
 
 ### run function
 ##~ this returns a named list object with 9 items
-data <- extract_huc_data(basin_dir = my_basin_dir, 
+camels_data <- extract_huc_data(basin_dir = my_basin_dir, 
                          attr_dir = my_attr_dir, 
                          huc8_names = my_huc8_names)
 ```
@@ -82,18 +82,18 @@ data <- extract_huc_data(basin_dir = my_basin_dir,
   
 #### view names of each list item
 ```{r}
-names(data)
+names(camels_data)
 ```
     
 ### access each item
 ```{r}
-mean_forcing <- data$mean_forcing_daymet
+mean_forcing <- camels_data$mean_forcing_daymet
 ### an alternative using [[]] syntax: 
-##~  mean_forcing <- data[["mean_forcing_daymet"]]
+##~  mean_forcing <- camels_data[["mean_forcing_daymet"]]
 ## OR, because this is the first item in the list:
-##~  mean_forcing <- data[[1]]
+##~  mean_forcing <- camels_data[[1]]
 ##this returns a tibble/data frame containing the mean forcing data
-str(mean_forcing) 
+glimpse(mean_forcing) 
 ```
   
   
@@ -111,13 +111,13 @@ library(lubridate) # for dates
 library(janitor) # clean column names
 
 ## first, rename huc ID's with location from camels_name, this isn't necessary, but makes for more informative labels
-locs <- data[["camels_name"]]
+locs <- camels_data[["camels_name"]]
 names(locs)
 
 # clean column names
 cleaned_forcing <- clean_names(mean_forcing)
 
-## join data (by ID) to bring in gauge names
+## join camels_data (by ID) to bring in gauge names
 cleaned_names <- left_join(cleaned_forcing, locs, by = c("id" = "gauge_id"))
 
 ### turn year, month, day columns into single "date" column
@@ -133,27 +133,30 @@ ggplot(mean_forcing_date, aes(date, prcp_mm_day)) +
 ## Get USGS water quality data
 ```{r}
 ## read in gauges of interest
-gauges <- readr::read_csv("../inst/extdata/USGS_trial_sites.csv")
+# gauges <- readr::read_csv("../inst/extdata/USGS_trial_sites.csv")
+
 
 ### dataRetrieval functions require sites to be named using an "Agency-Site#" format, this code reformats the trial sites csv into this format
 #~ eg: "USGS-01073319""
-gauges_new <- gauges %>% 
-  mutate(renamed_site = paste(SiteAgency, "-", SiteNumber, sep = ""))
+# gauges_new <- gauges %>% 
+  # mutate(renamed_site = paste(SiteAgency, "-", SiteNumber, sep = ""))
 
 ## get first 20 site names
-site_names <- gauges_new$renamed_site
+# site_names <- gauges_new$renamed_site
+site_names <- paste0("USGS-", my_huc8_names)
 
 sample_data <- get_sample_data(site_names)
 ```
 
 
-```{r}
+```{r, warning=FALSE}
 ## look at nitrogen species for all sites over time
 N_spp <- sample_data %>% 
   filter(CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)")
 
 ggplot(N_spp, aes(x = ActivityStartDate, y = ResultMeasureValue, color = MonitoringLocationIdentifier)) +
-  geom_point()
+  geom_point() + labs(title = "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)")
+  
 
 ```
 

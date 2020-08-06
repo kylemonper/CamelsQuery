@@ -4,10 +4,12 @@
 \alias{get_sample_data}
 \title{get sample data from dataRetrieval pacakge}
 \usage{
-get_sample_data(site_names)
+get_sample_data(site_names, chem_codes = USGS_parameter_priority)
 }
 \arguments{
 \item{site_names}{list of site names}
+
+\item{chem_codes}{a data frame with the USGS water chemistry codes of the parameters you want to query}
 }
 \value{
 water quality sample data for sites
