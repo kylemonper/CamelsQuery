@@ -3,6 +3,7 @@
 #' this is mainly a helper function for using the readWQPdata() function from the dataRetrieval package in that it helps the user identify if any of the station of interest don't have sample data associated with them, or simply don't exist.
 #'
 #' @param site_names list of site names
+#' @param chem_codes a data frame with the USGS water chemistry codes of the parameters you want to query
 #'
 #' @return water quality sample data for sites
 #' @export
@@ -12,7 +13,7 @@
 #' site_names <- c("USEPA-440432070255401","test", "USGS-010158001", "USGS-01011100", "test2")
 #' sample_data <- get_sample_data(site_names)
 #'}
-get_sample_data <- function(site_names) {
+get_sample_data <- function(site_names, chem_codes=USGS_parameter_priority) {
 
   ## the goal of this function is make the dataRetrieval::readWQPdata() function a bit easier to use
   #~ if site codes are incorrect readWQPdata() gives a vague error and also stops the function entirely, also it doesn't tell the user which sites dont have any qater quality data
@@ -57,7 +58,7 @@ get_sample_data <- function(site_names) {
   # then filter for only water quality data of interest based on the list of param_codes that is stored in the package data
   ##~~~ NOTE: may want to remove this feature/ add it as a T/F option in the function
   wq_data <- dataRetrieval::readWQPdata(siteid = site_names[working]) %>%
-    filter(USGSPCode %in% param_codes$`5_digit_code`)
+    filter(USGSPCode %in% chem_codes$`5_digit_code`)
 
   return(wq_data)
 
